@@ -2,7 +2,7 @@ package com.up.cursegame;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.up.cursegame.util.DataUtil;
+import com.up.cursegame.util.PlayerDataUtil;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 
@@ -18,15 +18,18 @@ public class CurseCommands {
 							.then(Commands.argument("min-duration", IntegerArgumentType.integer())
 								.then(Commands.argument("max-duration", IntegerArgumentType.integer())
 									.then(Commands.argument("active", IntegerArgumentType.integer())
-										.executes(context -> {
-											CurseGame.game.start(context.getSource().getServer(),
-													context.getArgument("min-lives", Integer.class),
-													context.getArgument("max-lives", Integer.class),
-													context.getArgument("min-duration", Integer.class) * 20,
-													context.getArgument("max-duration", Integer.class) * 20,
-													context.getArgument("active", Integer.class));
-											return 1;
-										})
+										.then(Commands.argument("border", IntegerArgumentType.integer())
+											.executes(context -> {
+												CurseGameMod.game.start(
+														context.getArgument("min-lives", Integer.class),
+														context.getArgument("max-lives", Integer.class),
+														context.getArgument("min-duration", Integer.class) * 20 * 60,
+														context.getArgument("max-duration", Integer.class) * 20 * 60,
+														context.getArgument("active", Integer.class),
+														context.getArgument("border", Integer.class));
+												return 1;
+											})
+										)
 									)
 								)
 							)
@@ -36,7 +39,7 @@ public class CurseCommands {
 					.then(Commands.argument("name", EntityArgument.player())
 						.then(Commands.argument("amount", IntegerArgumentType.integer())
 							.executes(context -> {
-								DataUtil.tradeLives(context.getSource().getPlayerOrException(), EntityArgument.getPlayer(context, "name"), context.getArgument("amount", Integer.class));
+								PlayerDataUtil.tradeLives(context.getSource().getPlayerOrException(), EntityArgument.getPlayer(context, "name"), context.getArgument("amount", Integer.class));
 								return 1;
 							})
 						)

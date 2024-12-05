@@ -1,8 +1,9 @@
 package com.up.cursegame.block.tileentity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.up.cursegame.CurseGame;
+import com.up.cursegame.CurseGameMod;
 import com.up.cursegame.block.Shrine;
+import com.up.cursegame.ritual.Ritual;
 import java.util.Random;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -19,8 +20,6 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
 
 /**
  *
@@ -28,10 +27,9 @@ import net.minecraft.util.math.vector.Quaternion;
  */
 public class ShrineEntity extends TileEntity implements ITickableTileEntity {
     
-    public static final TileEntityType<ShrineEntity> TYPE = (TileEntityType<ShrineEntity>)TileEntityType.Builder.<ShrineEntity>of(ShrineEntity::new, Shrine.INSTANCE).build(null).setRegistryName(CurseGame.MOD_ID, "shrine");
+    public static final TileEntityType<ShrineEntity> TYPE = (TileEntityType<ShrineEntity>)TileEntityType.Builder.<ShrineEntity>of(ShrineEntity::new, Shrine.INSTANCE).build(null).setRegistryName(CurseGameMod.MOD_ID, "shrine");
 
-    private float rotation;
-    private float rotationV = 0f;
+	private Ritual cureRitual;
     
     public ShrineEntity(TileEntityType<?> type) {
         super(type);
@@ -44,49 +42,27 @@ public class ShrineEntity extends TileEntity implements ITickableTileEntity {
     @Override
     public void tick() {
 //        if (!level.isClientSide) {
-//			Vector3d centerPos = Vector3d.atCenterOf(worldPosition);
-//			// Do targeting
-//			if (target != null && target.getPosition(0).vectorTo(centerPos).length() > range) target = null;
-//            if (target == null) {
-////				for (EnergyEntity e : level.getEntitiesOfClass(EnergyEntity.class, new AxisAlignedBB(centerPos.subtract(range, range, range), centerPos.add(range, range, range)))) {
-////					if (e.getPosition(0).vectorTo(centerPos).length() <= range) {
-////						target = e;
-////					}
-////				}
-//			}
-//            if (target != null) {
-//				// Point at target
-////                Vector3d targetDir = Vector3d.atCenterOf(worldPosition).vectorTo(target.getPosition(0)).multiply(1, 0, 1).normalize();
-//                Vector3d targetDirNext = Vector3d.atCenterOf(worldPosition).vectorTo(target.getPosition(0).add(target.getDeltaMovement())).multiply(1, 0, 1).normalize();
-//                rotationV = ((float)MathHelper.atan2(targetDirNext.x, targetDirNext.z) - rotation) / 2f;
-//                rotation += rotationV;
-//                if (rotation > Math.PI) rotation -= (float)Math.PI * 2;
-//                if (rotation < -Math.PI) rotation += (float)Math.PI * 2;
-//
-//                // Fire if have valid shot
-//                if (Math.abs(rotationV) < 0.1 && level.getDayTime() % 10 == 0) {
-//                    SnowballEntity shot = EntityType.SNOWBALL.create(level);
-//                    shot.setPos(getBlockPos().getX() + 0.5 + MathHelper.sin(rotation), getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5 + MathHelper.cos(rotation));
-//                    shot.setDeltaMovement(MathHelper.sin(rotation) / 2, 0, MathHelper.cos(rotation) / 2);
-//                    level.addFreshEntity(shot);
-//                }
-//                
-//                // Sync updates
-//                setChanged();
-//                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-//            }
+//			
 //        }
     }
+
+	public Ritual getCureRitual() {
+		return cureRitual;
+	}
+
+	public void setCureRitual(Ritual cureRitual) {
+		this.cureRitual = cureRitual;
+	}
     
     @Override
     public void load(BlockState state, CompoundNBT tag) {
         super.load(state, tag);
-        rotation = tag.getFloat("rotation");
+        if (tag.contains("cureRitual")) cureRitual = Ritual.fromTag(tag.getCompound("cureRitual"));
     }
 
     @Override
     public CompoundNBT save(CompoundNBT tag) {
-        tag.putFloat("rotation", rotation);
+        if (cureRitual != null) tag.put("cureRitual", cureRitual.toTag());
         return super.save(tag);
     }
 
@@ -114,33 +90,12 @@ public class ShrineEntity extends TileEntity implements ITickableTileEntity {
             super(dispatcher);
         }
         
-        // TODO: Revisit if this is the best way to render these
+        // TODO: Look into weird face ordering forge thing that is causing this to have weird lighting
         @Override
         public void render(ShrineEntity entity, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-            if (model == null) model = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(CurseGame.MOD_ID, "block/shrine"));
-            
-            float angle = (entity.rotation + entity.rotationV * partialTicks) / 2;
-            stack.pushPose();
-//            stack.translate(0.5, 0.5, 0.5);
-            stack.mulPose(new Quaternion(0f, MathHelper.sin(angle), 0f, MathHelper.cos(angle)));
+            if (model == null) model = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(CurseGameMod.MOD_ID, "block/shrine"));
             Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entity.getLevel(), model.getBakedModel(), entity.getBlockState(), entity.getBlockPos(), stack, bufferIn.getBuffer(RenderType.solid()), true, new Random(), entity.getBlockState().getSeed(entity.getBlockPos()), OverlayTexture.NO_OVERLAY, null);
-            stack.popPose();
         }
-        
-        // https://pastebin.com/beV8gxCc ??
-//        private static void renderQuads(MatrixStack matrixStack, IVertexBuilder vertexBuilder, List<BakedQuad> quads, int lightTexture, int overlayTexture) {
-//            MatrixStack.Entry entry = matrixStack.last();
-//            for (BakedQuad quad : quads) {
-//                int tintColor = 0xFFFFFF;
-//                if (quad.isTinted()) {
-//                    tintColor = -1;
-//                }
-//                float red = (float) (tintColor >> 16 & 255) / 255.0F;
-//                float green = (float) (tintColor >> 8 & 255) / 255.0F;
-//                float blue = (float) (tintColor & 255) / 255.0F;
-//                vertexBuilder.addVertexData(entry, quad, red, green, blue, lightTexture, overlayTexture, true);
-//            }
-//        }
 
     }
     

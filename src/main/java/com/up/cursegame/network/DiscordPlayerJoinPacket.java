@@ -1,6 +1,6 @@
 package com.up.cursegame.network;
 
-import com.up.cursegame.CurseGame;
+import com.up.cursegame.CurseGameMod;
 import com.up.cursegame.discord.DiscordPlayer;
 import java.util.function.Supplier;
 import net.minecraft.network.PacketBuffer;
@@ -36,7 +36,7 @@ public class DiscordPlayerJoinPacket {
 		ctx.get().enqueueWork(() -> {
 				PacketHandlers.sendAll(ctx.get().getSender().getServer(), new DiscordPlayerUpdatePacket(packet.discordId, player.getUuid(), player.getName(), DiscordPlayerUpdatePacket.UpdateAction.ADD));
 			});
-		CurseGame.serverDiscord.getPlayerManager().add(packet.discordId, player);
+		CurseGameMod.serverDiscord.getPlayerManager().add(packet.discordId, player);
 		ctx.get().setPacketHandled(true);
 	}
 }

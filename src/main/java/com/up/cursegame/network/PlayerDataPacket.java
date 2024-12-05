@@ -36,6 +36,7 @@ public class PlayerDataPacket {
 		ctx.get().enqueueWork(() -> {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 					PlayerData data = Minecraft.getInstance().player.getCapability(PlayerDataCapabilityProvider.PLAYER_DATA_CAPABILITY).orElse(null);
+					data.setPrevLives(packet.data.getPrevLives());
 					data.setLives(packet.data.getLives());
 					data.setCursed(packet.data.isCursed());
 					data.setActive(packet.data.isActive());

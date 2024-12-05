@@ -1,4 +1,6 @@
 {
 	"key.cursegame.category": "Curse Game",
-	"key.cursegame.mute.desc": "Discord Mute"
+	"key.cursegame.mute.desc": "Discord Mute",
+	"key.cursegame.deaf.desc": "Discord Deafen",
+	"key.cursegame.lives.desc": "Open Lives GUI"
 }

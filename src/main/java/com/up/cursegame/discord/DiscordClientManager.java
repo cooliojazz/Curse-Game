@@ -5,10 +5,10 @@ import de.jcm.discordgamesdk.CreateParams;
 import de.jcm.discordgamesdk.DiscordEventAdapter;
 import de.jcm.discordgamesdk.GameSDKException;
 import de.jcm.discordgamesdk.Result;
+import de.jcm.discordgamesdk.activity.Activity;
+import de.jcm.discordgamesdk.activity.ActivityType;
 import de.jcm.discordgamesdk.lobby.Lobby;
-import de.jcm.discordgamesdk.lobby.LobbySearchQuery;
 import de.jcm.discordgamesdk.user.DiscordUser;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -96,28 +96,28 @@ public class DiscordClientManager {
 		}
 	}
 	
-//	private void createActivity() {
-//		Activity testActivity = new Activity();
-//		testActivity.setDetails("Test Activity Please Ignore");
-//		testActivity.setType(ActivityType.PLAYING);
-//		testActivity.setState("Test State");
-//		testActivity.setInstance(true);
+	private void createActivity() {
+		Activity activity = new Activity();
+		activity.setDetails("Curse Game");
+		activity.setType(ActivityType.PLAYING);
+		activity.setState("Surviving");
+//		activity.setInstance(true);
 //		testActivity.party().setID("Test Party");
 //		testActivity.party().size().setCurrentSize(1);
 //		testActivity.party().size().setMaxSize(2);
 //		testActivity.secrets().setJoinSecret("Test Join Secret");
-//		core.activityManager().updateActivity(testActivity);
-////		new Thread(() -> {
-////			core.overlayManager().openActivityInvite(ActivityActionType.JOIN, result -> {
-////					System.out.println(result);
-////				});
-////		}).start();
-//	}
+		core.activityManager().updateActivity(activity);
+//		new Thread(() -> {
+//			core.overlayManager().openActivityInvite(ActivityActionType.JOIN, result -> {
+//					System.out.println(result);
+//				});
+//		}).start();
+	}
 	
 	public void enable(long lobbyId, String secret) {
 		try {
 			CreateParams params = new CreateParams();
-			params.setClientID(DiscordServerManager.applicationId);
+			params.setClientID(DiscordInfo.APPLICATION_ID);
 			params.setFlags(CreateParams.getDefaultFlags());
 			params.registerEventHandler(eventHandler);
 			
@@ -143,7 +143,7 @@ public class DiscordClientManager {
 			
 
 //			LobbySearchQuery query = core.lobbyManager().getSearchQuery();
-////			LobbySearchQuery query = core.lobbyManager().getSearchQuery().filter("metadata." + metadataKey, LobbySearchQuery.Comparison.EQUAL, LobbySearchQuery.Cast.STRING, gameId.toString());
+////			LobbySearchQuery query = core.lobbyManager().getSearchQuery().filter("metadata." + METADATA_KEY, LobbySearchQuery.Comparison.EQUAL, LobbySearchQuery.Cast.STRING, gameId.toString());
 //			core.lobbyManager().search(query, result -> {
 //					if (result == Result.OK) {
 //						core.lobbyManager().getLobbies().forEach(core.lobbyManager()::deleteLobby);

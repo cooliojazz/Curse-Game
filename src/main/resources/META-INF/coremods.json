@@ -1,3 +1,8 @@
 {
-	"DesertPyramidPiece": "com/up/cursegame/coremods/DesertPyramidPiece.js"
+	"AbstractVillagePiece": "com/up/cursegame/coremods/AbstractVillagePiece.js",
+	"DesertPyramidPiece": "com/up/cursegame/coremods/DesertPyramidPiece.js",
+	"EndPodiumFeature": "com/up/cursegame/coremods/EndPodiumFeature.js",
+	"MonumentCoreRoom": "com/up/cursegame/coremods/MonumentCoreRoom.js",
+	"SwampHutPiece": "com/up/cursegame/coremods/SwampHutPiece.js",
+	"DesertWellsFeature": "com/up/cursegame/coremods/DesertWellsFeature.js"
 }

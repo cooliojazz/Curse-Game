@@ -1,6 +1,6 @@
 package com.up.cursegame.network;
 
-import com.up.cursegame.CurseGame;
+import com.up.cursegame.CurseGameMod;
 import com.up.cursegame.discord.DiscordPlayer;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -46,9 +46,9 @@ public class DiscordPlayerUpdatePacket {
 	
 	public static void handle(DiscordPlayerUpdatePacket packet, Supplier<NetworkEvent.Context> ctx) {
 		if (packet.action == UpdateAction.ADD) {
-			CurseGame.clientDiscord.getPlayerManager().add(packet.discordId, new DiscordPlayer(packet.playerUuid, packet.playerName));
+			CurseGameMod.clientDiscord.getPlayerManager().add(packet.discordId, new DiscordPlayer(packet.playerUuid, packet.playerName));
 		} else if (packet.action == UpdateAction.REMOVE) {
-			CurseGame.clientDiscord.getPlayerManager().remove(packet.discordId);
+			CurseGameMod.clientDiscord.getPlayerManager().remove(packet.discordId);
 		}
 		ctx.get().setPacketHandled(true);
 	}

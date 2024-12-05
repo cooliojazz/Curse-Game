@@ -8,9 +8,9 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
-//import java.net.http.HttpClient;
-//import java.net.http.HttpRequest;
-//import java.net.http.HttpResponse;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 /**
  *
@@ -18,26 +18,11 @@ import java.util.UUID;
  */
 public class DiscordServerManager {
 	
-
-	public static final long applicationId = 979195004796960818l;
-	// This still probably shouldn't be in here but hopefully it won't be auto scraped for now at least
-	private static final String btp1 = "OTc5MTk1MDA0Nzk2OTYwODE4." + "GBm7Pu.";
-	private static final String btp2 = "3oq7VDk0PcYapH3DWxI4JIpbDTxmS6k5-" + "qTmyQ";
-	private static final String token = btp1 + btp2;
-	public static final String metadataKey = "curse-game-id";
-	private static final String discordApi = "https://discord.com/api/";
-	
 	private UUID gameId = UUID.randomUUID();
 	private Lobby lobby;
 	private boolean ready;
 	private DiscordPlayerManager playerManager = new DiscordPlayerManager();
-//	private HttpClient client = HttpClient.newBuilder()
-////				.version(Version.HTTP_1_1)
-////				.followRedirects(Redirect.NORMAL)
-////				.connectTimeout(Duration.ofSeconds(20))
-////				.proxy(ProxySelector.of(new InetSocketAddress("proxy.example.com", 80)))
-////				.authenticator(Authenticator.getDefault())
-//				.build();
+	private HttpClient client = HttpClient.newBuilder().build();
 	
 	public DiscordServerManager() { }
 
@@ -59,8 +44,8 @@ public class DiscordServerManager {
 	
 	private void deleteLobby() throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
-			 .uri(URI.create(discordApi + "lobbies/" + lobby.getId()))
-			 .header("Authorization", "Bot " + token)
+			 .uri(URI.create(DiscordInfo.DISCORD_API_URL + "lobbies/" + lobby.getId()))
+			 .header("Authorization", "Bot " + DiscordInfo.BOT_TOKEN)
 			 .DELETE()
 			 .build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -70,10 +55,10 @@ public class DiscordServerManager {
 	private void createLobby() throws IOException, InterruptedException {
 		Gson gson = new Gson();
 		HttpRequest request = HttpRequest.newBuilder()
-			 .uri(URI.create(discordApi + "lobbies"))
-			 .header("Authorization", "Bot " + token)
+			 .uri(URI.create(DiscordInfo.DISCORD_API_URL + "lobbies"))
+			 .header("Authorization", "Bot " + DiscordInfo.BOT_TOKEN)
 			 .header("Content-Type", "application/json")
-			 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(new CreateLobbyRequest(applicationId + "", LobbyType.PRIVATE.ordinal() + 1, Collections.singletonMap(metadataKey, gameId.toString()), 10, null))))
+			 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(new CreateLobbyRequest(DiscordInfo.APPLICATION_ID + "", LobbyType.PRIVATE.ordinal() + 1, Collections.singletonMap(DiscordInfo.METADATA_KEY, gameId.toString()), 10, null))))
 			 .build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		if (response.statusCode() != 200) throw new RuntimeException("Error creating discord lobby!\n" + response.body());

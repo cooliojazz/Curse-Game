@@ -4,10 +4,10 @@ function initializeCoreMod() {
 	var IntInsnNode = Java.type("org.objectweb.asm.tree.IntInsnNode");
 	
 	return {
-		"DesertPyramidPieceTransformer": {
+		"AbstractVillagePieceTransformer": {
 			"target": {
 				"type": "METHOD",
-				"class": "net.minecraft.world.gen.feature.structure.DesertPyramidPiece",
+				"class": "net.minecraft.world.gen.feature.structure.AbstractVillagePiece",
 //				"methodName": "postProcess",
 				"methodName": "func_230383_a_",
 				"methodDesc": "(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z",
@@ -19,7 +19,7 @@ function initializeCoreMod() {
 						new IntInsnNode(Opcodes.ALOAD, 0),
 						new IntInsnNode(Opcodes.ALOAD, 1),
 						new IntInsnNode(Opcodes.ALOAD, 5),
-								ASMAPI.buildMethodCall("com/up/cursegame/asm/DesertPyramidPieceTransformer", "postPostProcess", "(Lnet/minecraft/world/gen/feature/structure/DesertPyramidPiece;Lnet/minecraft/world/ISeedReader;Lnet/minecraft/util/math/MutableBoundingBox;)V", ASMAPI.MethodType.STATIC));
+						ASMAPI.buildMethodCall("com/up/cursegame/asm/AbstractVillagePieceTransformer", "postPostProcess", "(Lnet/minecraft/world/gen/feature/structure/AbstractVillagePiece;Lnet/minecraft/world/ISeedReader;Lnet/minecraft/util/math/MutableBoundingBox;)V", ASMAPI.MethodType.STATIC));
 				method.instructions.insertBefore(method.instructions.get(method.instructions.size() - 2), instructions);
 				return method;
 			}

@@ -1,6 +1,6 @@
 package com.up.cursegame.network;
 
-import com.up.cursegame.CurseGame;
+import com.up.cursegame.CurseGameMod;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class PacketHandlers {
 	
 	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(CurseGame.MOD_ID, "network"),
+	public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(CurseGameMod.MOD_ID, "network"),
 			() -> PROTOCOL_VERSION,
 			PROTOCOL_VERSION::equals,
 			PROTOCOL_VERSION::equals
@@ -27,8 +27,9 @@ public class PacketHandlers {
 		INSTANCE.registerMessage(1, PlayerTradeLivesPacket.class, PlayerTradeLivesPacket::encode, PlayerTradeLivesPacket::decode, PlayerTradeLivesPacket::handle);
 		INSTANCE.registerMessage(2, DiscordPlayerUpdatePacket.class, DiscordPlayerUpdatePacket::encode, DiscordPlayerUpdatePacket::decode, DiscordPlayerUpdatePacket::handle);
 		INSTANCE.registerMessage(3, DiscordPlayerJoinPacket.class, DiscordPlayerJoinPacket::encode, DiscordPlayerJoinPacket::decode, DiscordPlayerJoinPacket::handle);
-		INSTANCE.registerMessage(4, DiscordPlayerDistancePacket.class, DiscordPlayerDistancePacket::encode, DiscordPlayerDistancePacket::decode, DiscordPlayerDistancePacket::handle);
+		INSTANCE.registerMessage(4, DiscordPlayerDistancesPacket.class, DiscordPlayerDistancesPacket::encode, DiscordPlayerDistancesPacket::decode, DiscordPlayerDistancesPacket::handle);
 		INSTANCE.registerMessage(5, DiscordLobbyPacket.class, DiscordLobbyPacket::encode, DiscordLobbyPacket::decode, DiscordLobbyPacket::handle);
+		INSTANCE.registerMessage(6, PlayerActivePercentPacket.class, PlayerActivePercentPacket::encode, PlayerActivePercentPacket::decode, PlayerActivePercentPacket::handle);
 	}
 	
 	public static void sendToServer(Object packet) {
@@ -40,6 +41,10 @@ public class PacketHandlers {
 		INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 	
+	public static void sendToPlayers(MinecraftServer server, Object packet) {
+		server.getAllLevels().forEach(world -> world.players().forEach(player -> sendToPlayer(player, packet)));
+	}
+	
 	public static void send(ServerPlayerEntity player, PlayerDataPacket packet) {
 		sendToPlayer(player, packet);
 	}
@@ -49,7 +54,7 @@ public class PacketHandlers {
 //	}
 	
 	public static void sendAll(MinecraftServer server, PlayerDataPacket packet) {
-		server.getAllLevels().forEach(world -> world.players().forEach(player -> sendToPlayer(player, packet)));
+		sendToPlayers(server, packet);
 	}
 	
 	public static void send(ServerPlayerEntity player, DiscordPlayerUpdatePacket packet) {
@@ -57,14 +62,18 @@ public class PacketHandlers {
 	}
 	
 	public static void sendAll(MinecraftServer server, DiscordPlayerUpdatePacket packet) {
-		server.getAllLevels().forEach(world -> world.players().forEach(player -> sendToPlayer(player, packet)));
+		sendToPlayers(server, packet);
 	}
 	
-	public static void send(ServerPlayerEntity player, DiscordPlayerDistancePacket packet) {
+	public static void send(ServerPlayerEntity player, DiscordPlayerDistancesPacket packet) {
 		sendToPlayer(player, packet);
 	}
 	
 	public static void send(ServerPlayerEntity player, DiscordLobbyPacket packet) {
+		sendToPlayer(player, packet);
+	}
+	
+	public static void send(ServerPlayerEntity player, PlayerActivePercentPacket packet) {
 		sendToPlayer(player, packet);
 	}
 	

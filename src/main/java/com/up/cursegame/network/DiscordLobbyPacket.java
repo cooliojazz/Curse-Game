@@ -1,6 +1,6 @@
 package com.up.cursegame.network;
 
-import com.up.cursegame.CurseGame;
+import com.up.cursegame.CurseGameMod;
 import java.util.function.Supplier;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -35,8 +35,8 @@ public class DiscordLobbyPacket {
 	}
 	
 	public static void handle(DiscordLobbyPacket packet, Supplier<NetworkEvent.Context> ctx) {
-		CurseGame.clientDiscord.enable(packet.lobbyId, packet.secret);
-		PacketHandlers.send(new DiscordPlayerJoinPacket(CurseGame.clientDiscord.getUser().getUserId()));
+		CurseGameMod.clientDiscord.enable(packet.lobbyId, packet.secret);
+		PacketHandlers.send(new DiscordPlayerJoinPacket(CurseGameMod.clientDiscord.getUser().getUserId()));
 		ctx.get().setPacketHandled(true);
 	}
 }
