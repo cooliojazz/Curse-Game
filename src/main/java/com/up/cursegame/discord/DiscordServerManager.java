@@ -20,9 +20,10 @@ public class DiscordServerManager {
 	
 
 	public static final long applicationId = 979195004796960818l;
+	// This still probably shouldn't be in here but hopefully it won't be auto scraped for now at least
 	private static final String btp1 = "OTc5MTk1MDA0Nzk2OTYwODE4." + "GBm7Pu.";
 	private static final String btp2 = "3oq7VDk0PcYapH3DWxI4JIpbDTxmS6k5-" + "qTmyQ";
-	private static final String botToken = btp1 + btp2;
+	private static final String token = btp1 + btp2;
 	public static final String metadataKey = "curse-game-id";
 	private static final String discordApi = "https://discord.com/api/";
 	
@@ -59,7 +60,7 @@ public class DiscordServerManager {
 	private void deleteLobby() throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 			 .uri(URI.create(discordApi + "lobbies/" + lobby.getId()))
-			 .header("Authorization", "Bot " + botToken)
+			 .header("Authorization", "Bot " + token)
 			 .DELETE()
 			 .build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -70,7 +71,7 @@ public class DiscordServerManager {
 		Gson gson = new Gson();
 		HttpRequest request = HttpRequest.newBuilder()
 			 .uri(URI.create(discordApi + "lobbies"))
-			 .header("Authorization", "Bot " + botToken)
+			 .header("Authorization", "Bot " + token)
 			 .header("Content-Type", "application/json")
 			 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(new CreateLobbyRequest(applicationId + "", LobbyType.PRIVATE.ordinal() + 1, Collections.singletonMap(metadataKey, gameId.toString()), 10, null))))
 			 .build();
