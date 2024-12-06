@@ -33,11 +33,11 @@ public class PlayerEvents {
 		PlayerData data = player.getCapability(PlayerDataCapabilityProvider.PLAYER_DATA_CAPABILITY).orElse(null);
 		PacketHandlers.send(player, new PlayerDataPacket(data));
 		
-		for (DiscordPlayer dp : CurseGameMod.serverDiscord.getPlayerManager().getPlayers()) {
-			PacketHandlers.send(player, new DiscordPlayerUpdatePacket(CurseGameMod.serverDiscord.getPlayerManager().getDiscordId(dp), dp.getUuid(), dp.getName(), DiscordPlayerUpdatePacket.UpdateAction.ADD));
-		}
-		if (!CurseGameMod.serverDiscord.isReady()) CurseGameMod.serverDiscord.enable();
-		PacketHandlers.send(player, new DiscordLobbyPacket(CurseGameMod.serverDiscord.getLobbyId(), CurseGameMod.serverDiscord.getSecret()));
+//		for (DiscordPlayer dp : CurseGameMod.serverDiscord.getPlayerManager().getPlayers()) {
+//			PacketHandlers.send(player, new DiscordPlayerUpdatePacket(CurseGameMod.serverDiscord.getPlayerManager().getDiscordId(dp), dp.getUuid(), dp.getName(), DiscordPlayerUpdatePacket.UpdateAction.ADD));
+//		}
+//		if (!CurseGameMod.serverDiscord.isReady()) CurseGameMod.serverDiscord.enable();
+//		PacketHandlers.send(player, new DiscordLobbyPacket(CurseGameMod.serverDiscord.getLobbyId(), CurseGameMod.serverDiscord.getSecret()));
 		
 		// TODO: Don't forget to remove this quick hack to disable auth for local servers
 //		event.getPlayer().level.getServer().setUsesAuthentication(false);
@@ -108,12 +108,12 @@ public class PlayerEvents {
 		if (event.getEntity() instanceof PlayerEntity) {
 			World world = event.getEntity().level;
 			if (!world.isClientSide) {
-				DiscordPlayer player = CurseGameMod.serverDiscord.getPlayerManager().getPlayerByUuid(event.getEntity().getUUID());
-				if (player != null) {
-					PacketHandlers.sendAll(world.getServer(), new DiscordPlayerUpdatePacket(CurseGameMod.serverDiscord.getPlayerManager().getDiscordId(player), player.getUuid(), player.getName(), DiscordPlayerUpdatePacket.UpdateAction.REMOVE));
-					CurseGameMod.serverDiscord.getPlayerManager().remove(player);
-				}
-				if (CurseGameMod.serverDiscord.getPlayerManager().getPlayers().isEmpty()) CurseGameMod.serverDiscord.disable();
+//				DiscordPlayer player = CurseGameMod.serverDiscord.getPlayerManager().getPlayerByUuid(event.getEntity().getUUID());
+//				if (player != null) {
+//					PacketHandlers.sendAll(world.getServer(), new DiscordPlayerUpdatePacket(CurseGameMod.serverDiscord.getPlayerManager().getDiscordId(player), player.getUuid(), player.getName(), DiscordPlayerUpdatePacket.UpdateAction.REMOVE));
+//					CurseGameMod.serverDiscord.getPlayerManager().remove(player);
+//				}
+//				if (CurseGameMod.serverDiscord.getPlayerManager().getPlayers().isEmpty()) CurseGameMod.serverDiscord.disable();
 			}
 		}
 	}

@@ -35,7 +35,7 @@ public class CurseGameMod {
 	public static final String MOD_ID = "cursegame";
 	private static final Logger LOGGER = LogManager.getLogger();
 	public static DiscordClientManager clientDiscord;
-	public static DiscordServerManager serverDiscord;
+//	public static DiscordServerManager serverDiscord;
 	public static GameManager game;
 	
 	public CurseGameMod() {
@@ -57,13 +57,13 @@ public class CurseGameMod {
 	
 	@SubscribeEvent
 	public static void onServerStart(FMLServerStartingEvent event) {
-		serverDiscord = new DiscordServerManager();
+//		serverDiscord = new DiscordServerManager();
 		game = new GameManager(event.getServer());
 	}
 	
 	@SubscribeEvent
 	public static void onServerStop(FMLServerStoppingEvent event) {
-		if (CurseGameMod.serverDiscord.isReady()) serverDiscord.disable();
+//		if (CurseGameMod.serverDiscord.isReady()) serverDiscord.disable();
 	}
 	
 	@SubscribeEvent

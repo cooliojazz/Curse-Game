@@ -146,9 +146,9 @@ public class GameManager {
 		if (ticks % 5 == 0) {
 			List<ServerPlayerEntity> players = getAllPlayers();
 			players.forEach(player -> {
-					if (CurseGameMod.serverDiscord.getPlayerManager().getPlayerByUuid(player.getUUID()) != null) {
-						updateDistances(player);
-					}
+//					if (CurseGameMod.serverDiscord.getPlayerManager().getPlayerByUuid(player.getUUID()) != null) {
+//						updateDistances(player);
+//					}
 				});
 		}
 	}

@@ -36,7 +36,7 @@ public class DiscordPlayerJoinPacket {
 		ctx.get().enqueueWork(() -> {
 				PacketHandlers.sendAll(ctx.get().getSender().getServer(), new DiscordPlayerUpdatePacket(packet.discordId, player.getUuid(), player.getName(), DiscordPlayerUpdatePacket.UpdateAction.ADD));
 			});
-		CurseGameMod.serverDiscord.getPlayerManager().add(packet.discordId, player);
+//		CurseGameMod.serverDiscord.getPlayerManager().add(packet.discordId, player);
 		ctx.get().setPacketHandled(true);
 	}
 }

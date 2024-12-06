@@ -1,6 +1,7 @@
 package com.up.cursegame.discord;
 
 import com.google.gson.Gson;
+import de.jcm.discordgamesdk.NetworkManager;
 import de.jcm.discordgamesdk.lobby.Lobby;
 import de.jcm.discordgamesdk.lobby.LobbyType;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 /**
- *
+ * Turns out Discord removed the lobbies feature from their Game SDK, so all of this is useless now and would need to be replaced with some other voice solution
  * @author Ricky
  */
 public class DiscordServerManager {
@@ -24,14 +25,15 @@ public class DiscordServerManager {
 	private DiscordPlayerManager playerManager = new DiscordPlayerManager();
 	private HttpClient client = HttpClient.newBuilder().build();
 	
-	public DiscordServerManager() { }
+	public DiscordServerManager() {
+	}
 
 	public UUID getGameId() {
 		return gameId;
 	}
 	
 	public long getLobbyId() {
-		return lobby.getId();
+		return lobby == null ? -1 : lobby.getId();
 	}
 
 	public String getSecret() {
@@ -46,6 +48,7 @@ public class DiscordServerManager {
 		HttpRequest request = HttpRequest.newBuilder()
 			 .uri(URI.create(DiscordInfo.DISCORD_API_URL + "lobbies/" + lobby.getId()))
 			 .header("Authorization", "Bot " + DiscordInfo.BOT_TOKEN)
+			 .header("User-Agent", "DiscordBot (http://unphan.co, 1.3.0)")
 			 .DELETE()
 			 .build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -57,6 +60,7 @@ public class DiscordServerManager {
 		HttpRequest request = HttpRequest.newBuilder()
 			 .uri(URI.create(DiscordInfo.DISCORD_API_URL + "lobbies"))
 			 .header("Authorization", "Bot " + DiscordInfo.BOT_TOKEN)
+			 .header("User-Agent", "DiscordBot (http://unphan.co, 1.3.0)")
 			 .header("Content-Type", "application/json")
 			 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(new CreateLobbyRequest(DiscordInfo.APPLICATION_ID + "", LobbyType.PRIVATE.ordinal() + 1, Collections.singletonMap(DiscordInfo.METADATA_KEY, gameId.toString()), 10, null))))
 			 .build();
